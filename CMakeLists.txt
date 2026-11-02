@@ -58,16 +58,22 @@ else()
 endif()
 
 # ------------------------------------------------------------------------------
-# The HMS driver (unmodified)
+# The HMS driver (unmodified), pulled in as a git submodule
 # ------------------------------------------------------------------------------
 
+set(ONE_DRIVER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/abo-driver-spi")
+if(NOT EXISTS "${ONE_DRIVER_DIR}/inc/abo_spi.h")
+    message(FATAL_ERROR "SPI driver not found in ${ONE_DRIVER_DIR}. "
+        "Run: git submodule update --init")
+endif()
+
 add_library(abo_spi STATIC
-    abo-driver-spi/src/abo_spi.c
-    abo-driver-spi/src/abo_spi_bytes.c
-    abo-driver-spi/src/abo_spi_frame.c
-    abo-driver-spi/src/abo_spi_channel.c)
-target_include_directories(abo_spi PUBLIC abo-driver-spi/inc "${ONE_CONFIG_DIR}"
-    PRIVATE abo-driver-spi/src)
+    "${ONE_DRIVER_DIR}/src/abo_spi.c"
+    "${ONE_DRIVER_DIR}/src/abo_spi_bytes.c"
+    "${ONE_DRIVER_DIR}/src/abo_spi_frame.c"
+    "${ONE_DRIVER_DIR}/src/abo_spi_channel.c")
+target_include_directories(abo_spi PUBLIC "${ONE_DRIVER_DIR}/inc" "${ONE_CONFIG_DIR}"
+    PRIVATE "${ONE_DRIVER_DIR}/src")
 target_compile_options(abo_spi PRIVATE ${ONE_WARNINGS})
 
 # ------------------------------------------------------------------------------
