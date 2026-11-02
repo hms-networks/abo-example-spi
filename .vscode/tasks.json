@@ -1,0 +1,32 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "type": "cmake",
+      "command": "build",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$msCompile", "$gcc"]
+    },
+    {
+      "label": "List MCP2210 devices",
+      "type": "cmake",
+      "command": "build",
+      "targets": ["list_mcp2210"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Run one_spi (Ctrl+C to stop)",
+      "type": "cmake",
+      "command": "build",
+      "targets": ["run_one_spi"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean rebuild",
+      "type": "cmake",
+      "command": "cleanRebuild",
+      "problemMatcher": ["$msCompile", "$gcc"]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  // F5 debugs one_spi (the CMake launch target).
+  //
+  // Console arguments (edit "args"):
+  //   --list  --serial <sn>  --cs <0..8>  --bitrate <Hz>  --seconds <n>  --dump  --verbose
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug (MSVC)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "args": ["--dump"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "preLaunchTask": "Build"
+    },
+    {
+      "name": "Debug (MinGW gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "args": ["--dump"],
+      "cwd": "${workspaceFolder}",
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "stopAtEntry": false,
+      "setupCommands": [
+        { "description": "Pretty printing", "text": "-enable-pretty-printing", "ignoreFailures": true }
+      ],
+      "preLaunchTask": "Build"
+    },
+    {
+      "name": "Debug (Linux gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "args": ["--dump"],
+      "cwd": "${workspaceFolder}",
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "stopAtEntry": false,
+      "preLaunchTask": "Build"
+    }
+  ]
+}

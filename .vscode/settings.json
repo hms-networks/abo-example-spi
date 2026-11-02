@@ -1,0 +1,18 @@
+{
+  // CMake Tools drives configure / build / debug from CMakePresets.json.
+  "cmake.useCMakePresets": "always",
+  "cmake.configureOnOpen": true,
+  "cmake.options.statusBarVisibility": "visible",
+
+  // IntelliSense takes include paths and defines from CMake (incl. the config header dir).
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "C_Cpp.default.cStandard": "c99",
+  "C_Cpp.clang_format_style": "file",
+
+  "files.associations": {
+    "*.h": "c"
+  },
+  "files.exclude": {
+    "build/": true
+  }
+}
