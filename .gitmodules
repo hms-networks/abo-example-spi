@@ -1,0 +1,3 @@
+[submodule "abo-example-spi"]
+	path = abo-example-spi
+	url = https://github.com/hms-networks/abo-driver-spi.git
