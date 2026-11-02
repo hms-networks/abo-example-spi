@@ -1,0 +1,52 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 21, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "msvc",
+      "inherits": "base",
+      "displayName": "MSVC x64 (Visual Studio 2022 / Build Tools)",
+      "description": "Needs Visual Studio 2022 or the Build Tools with the 'Desktop development with C++' workload.",
+      "generator": "Visual Studio 17 2022",
+      "architecture": { "value": "x64", "strategy": "set" },
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "mingw",
+      "inherits": "base",
+      "displayName": "MinGW-w64 GCC + Ninja (MSYS2 UCRT64)",
+      "description": "Needs gcc, gdb and ninja on PATH, e.g. MSYS2: pacman -S mingw-w64-ucrt-x86_64-{gcc,gdb,ninja,cmake}.",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "linux",
+      "inherits": "base",
+      "displayName": "Linux GCC + Ninja",
+      "description": "Needs libudev-dev for hidapi's hidraw backend.",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "msvc-debug", "displayName": "Debug", "configurePreset": "msvc", "configuration": "Debug" },
+    { "name": "msvc-release", "displayName": "Release", "configurePreset": "msvc", "configuration": "Release" },
+    { "name": "mingw-debug", "displayName": "Debug", "configurePreset": "mingw" },
+    { "name": "linux-debug", "displayName": "Debug", "configurePreset": "linux" }
+  ]
+}
