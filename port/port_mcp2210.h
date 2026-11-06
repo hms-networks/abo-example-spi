@@ -25,12 +25,13 @@
 extern "C" {
 #endif
 
-/** @brief Overrides for Port_Open. Zero / NULL / -1 fields keep the default. */
+/** @brief Overrides for Port_Open. Zero / NULL / -1 / false fields keep the default. */
 typedef struct Port_Options
 {
    const char* serial;   /**< MCP2210 USB serial number; NULL keeps the default. */
    int csPin;            /**< GP pin 0..8; -1 keeps the default. */
-   uint32_t bitRateHz;   /**< SPI clock; 0 keeps the default (automatic). */
+   bool bitRateGiven;    /**< true: use bitRateHz; false keeps the default. */
+   uint32_t bitRateHz;   /**< SPI clock in Hz, used when bitRateGiven; 0 = automatic (about 3 MHz). */
    uint16_t vid;         /**< 0 keeps the default. */
    uint16_t pid;         /**< 0 keeps the default. */
    bool verbose;         /**< Print every transfer error, not only changes. */

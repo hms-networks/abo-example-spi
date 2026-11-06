@@ -312,7 +312,7 @@ void Port_Configure(const Port_Options_t* options)
       portState.config.csPin = (uint8_t)options->csPin;
    }
 
-   if (options->bitRateHz != 0u)
+   if (options->bitRateGiven)
    {
       portState.config.bitRateHz = options->bitRateHz;
    }

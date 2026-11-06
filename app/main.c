@@ -39,7 +39,7 @@ static volatile sig_atomic_t stopRequested;
 ** Application - adapt to your generated header
 *******************************************************************************/
 
-/* Fill the from-host image before the first cycle (README, Quick start, step 5). */
+/* Fill the from-host image before the first cycle (driver README, lib/abo-driver-spi/README.md: "Quick start", step 5). */
 static void FillBeforeFirstCycle(void)
 {
    ABO_SPI_STATUSDATASET_Set_STATUS(&oneLink, 0u);
@@ -95,7 +95,7 @@ static void PrintUsage(const char* program)
           "  --list               list attached MCP2210s and exit\n"
           "  --serial <text>      use the MCP2210 with this USB serial number\n"
           "  --cs <0..8>          GP pin wired to the ONE's chip select (default %d)\n"
-          "  --bitrate <Hz>       SPI clock (default: automatic, ~3 MHz within %lu..%lu Hz)\n"
+          "  --bitrate <Hz>       SPI clock (default %lu Hz; 0 = automatic, ~3 MHz within %lu..%lu Hz)\n"
           "  --vid <hex> --pid <hex>  USB IDs if the MCP2210 was reprogrammed\n"
           "  --seconds <n>        stop after n seconds (default: run until Ctrl+C)\n"
           "  --dump               print the to-host / from-host images each second\n"
@@ -106,6 +106,11 @@ static void PrintUsage(const char* program)
           ONE_MCP2210_CS_PIN,
 #else
           2,
+#endif
+#ifdef ONE_MCP2210_BITRATE_HZ
+          (unsigned long)ONE_MCP2210_BITRATE_HZ,
+#else
+          1000000ul,
 #endif
           (unsigned long)ABO_SPI_MIN_FREQUENCY_HZ, (unsigned long)ABO_SPI_FREQUENCY_HZ);
 }
@@ -201,6 +206,7 @@ int main(int argc, char** argv)
       else if ((strcmp(arg, "--bitrate") == 0) && value)
       {
          options.bitRateHz = (uint32_t)strtoul(value, NULL, 0);
+         options.bitRateGiven = true;
          i++;
       }
       else if ((strcmp(arg, "--vid") == 0) && value)
@@ -271,7 +277,7 @@ int main(int argc, char** argv)
       uint32_t wait = ABO_SPI_UsUntilDue(&oneLink);
       uint64_t now;
 
-      /* Sleep rather than spin when there is time (README, "An RTOS task or a thread"). */
+      /* Sleep rather than spin when there is time (driver README: "Where to call it from", "An RTOS task or a thread"). */
       if (wait > 0u)
       {
          PcClock_SleepUs(wait);
@@ -280,7 +286,7 @@ int main(int argc, char** argv)
       result = ABO_SPI_RunCycle(&oneLink);
       online = ABO_SPI_IsOnline(&oneLink);
 
-      /* The ONE stopped answering: act once, on the change (README, "Outside the loop"). */
+      /* The ONE stopped answering: act once, on the change (driver README: "Quick start", "Outside the loop"). */
       if (wasOnline && !online)
       {
          WhenTheDeviceIsLost();
