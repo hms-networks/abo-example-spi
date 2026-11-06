@@ -42,33 +42,33 @@ static volatile sig_atomic_t stopRequested;
 /* Fill the from-host image before the first cycle (README, Quick start, step 5). */
 static void FillBeforeFirstCycle(void)
 {
-   ABO_SPI_STATUS_DATA_Set_STATUS_WORD(&oneLink, 0u);
-   ABO_SPI_STATUS_DATA_Set_ACTUAL_SPEED(&oneLink, 0u);
+   ABO_SPI_STATUSDATASET_Set_STATUS(&oneLink, 0u);
+   ABO_SPI_STATUSDATASET_Set_ACTUAL_SPEED(&oneLink, 0u);
 }
 
 /* A frame was just accepted. Everything read here belongs to it. */
 static void UseTheFrame(void)
 {
    /* A channel's values are read unconditionally. */
-   exampleSetpoint = ABO_SPI_CONTROL_DATA_Get_SPEED_SETPOINT(&oneLink);
-   exampleControlWord = ABO_SPI_CONTROL_DATA_Get_CONTROL_WORD(&oneLink);
+   exampleSetpoint = ABO_SPI_CONTROLDATASET_Get_REFERENCE_SPEED(&oneLink);
+   exampleControlWord = ABO_SPI_CONTROLDATASET_Get_CONTROL(&oneLink);
 
    /* Live, or the configured substitute? */
-   exampleSetpointIsLive = ABO_SPI_CONTROL_DATA_IsDataValid(&oneLink);
+   exampleSetpointIsLive = ABO_SPI_CONTROLDATASET_IsDataValid(&oneLink);
 
    /* A connection ended since the last call: drop what was held for it. */
-   if (ABO_SPI_CONTROL_DATA_TakeCloseEvent(&oneLink))
+   if (ABO_SPI_CONTROLDATASET_TakeCloseEvent(&oneLink))
    {
       exampleSetpoint = 0u;
       exampleControlWord = 1u;
    }
 
    /* Goes out with the next frame. */
-   ABO_SPI_STATUS_DATA_Set_STATUS_WORD(&oneLink, exampleControlWord);
-   ABO_SPI_STATUS_DATA_Set_ACTUAL_SPEED(&oneLink, exampleSetpoint);
+   ABO_SPI_STATUSDATASET_Set_STATUS(&oneLink, exampleControlWord);
+   ABO_SPI_STATUSDATASET_Set_ACTUAL_SPEED(&oneLink, exampleSetpoint);
 
    /* Producer status starts bad at Init; until it is good the ONE ignores these values. */
-   ABO_SPI_STATUS_DATA_SetProducerGood(&oneLink, true);
+   ABO_SPI_STATUSDATASET_SetProducerGood(&oneLink, true);
 }
 
 /* The device has just stopped answering. Called once per loss. */
